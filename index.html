@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#071b2b" />
+    <meta
+      name="description"
+      content="港口貨櫃：在十輪船期中調度橋式起重機與場橋，堆疊、隔離、準時裝船。"
+    />
+    <title>港口貨櫃 · PIERBOX</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="harbor-bg" aria-hidden="true">
+      <div class="sun"></div>
+      <div class="gantry g1"></div>
+      <div class="gantry g2"></div>
+      <div class="water"></div>
+    </div>
+
+    <main>
+      <header class="topbar">
+        <div class="brand">
+          <span class="port-mark" aria-hidden="true">P</span>
+          <div><p>PIER 06 · 高雄外港</p><h1>港口貨櫃</h1></div>
+        </div>
+        <button id="sound-toggle" class="utility" type="button" aria-pressed="true">♫ 聲音</button>
+      </header>
+
+      <section id="lobby" class="lobby card">
+        <div class="manifest-stamp">SHIFT<br />06</div>
+        <p class="eyebrow">YARD CONTROL / 10 ROUNDS</p>
+        <h2>接管凌晨貨櫃班</h2>
+        <p class="lead">
+          兩座橋式起重機持續卸貨，但全場每天只有 3 點設備工時。重櫃墊底、危險品隔離，
+          趕在船期前把正確的櫃送上正確的船。
+        </p>
+        <fieldset class="zone-picker">
+          <legend>選擇堆場策略</legend>
+          <label class="strategy selected">
+            <input type="radio" name="strategy" value="none" checked />
+            <span><strong>自由堆場</strong><small>空間靈活，但容易挖櫃重排</small></span>
+          </label>
+          <label class="strategy">
+            <input type="radio" name="strategy" value="zoned" />
+            <span><strong>船別預分區</strong><small>每船固定 2 格，減少混堆但浪費空間</small></span>
+          </label>
+        </fieldset>
+        <button id="start-button" class="primary jumbo" type="button">啟動港機</button>
+        <div class="records">
+          <span>最佳分數 <strong id="best-score">0</strong></span>
+          <span>已解鎖班表 <strong id="unlock-count">0 / 2</strong></span>
+        </div>
+      </section>
+
+      <section id="game" hidden>
+        <div class="hud card" aria-label="班表狀態">
+          <div><span>輪次</span><strong id="round-value">1 / 10</strong></div>
+          <div><span>靠港</span><strong id="vessel-value">ORCA</strong></div>
+          <div><span>設備工點</span><strong id="work-value">●●●</strong></div>
+          <div><span>總分</span><strong id="score-value">0</strong></div>
+        </div>
+
+        <section class="quay card">
+          <div class="section-title">
+            <div><p class="eyebrow">SHIP-TO-SHORE</p><h2>碼頭待卸</h2></div>
+            <span class="vessel-badge">本輪 <b id="current-vessel">ORCA</b></span>
+          </div>
+          <div id="quay-lanes" class="quay-lanes"></div>
+        </section>
+
+        <section class="yard-shell card">
+          <div class="section-title">
+            <div><p class="eyebrow">6 BAYS × 4 HIGH</p><h2>貨櫃堆場</h2></div>
+            <span id="selection-label" class="selection-label">先點待卸櫃</span>
+          </div>
+          <div id="yard" class="yard" aria-label="六格貨櫃堆場"></div>
+          <div class="yard-legend">
+            <span><i class="weight heavy"></i>重</span>
+            <span><i class="weight medium"></i>中</span>
+            <span><i class="weight light"></i>輕</span>
+            <span><i class="haz"></i>危險品需隔離</span>
+          </div>
+        </section>
+
+        <section class="control card">
+          <div class="score-strip">
+            <span>合約 <b id="contract-score">+0</b></span>
+            <span>重排 <b id="reshuffle-score">−0</b></span>
+            <span>逾期／錯船 <b id="penalty-score">−0</b></span>
+          </div>
+          <div id="temp-area" class="temp-area"></div>
+          <p id="message" class="message" role="status"></p>
+          <div class="actions">
+            <button id="load-button" type="button" disabled>裝上本輪船</button>
+            <button id="temp-button" type="button" disabled>移至臨時區</button>
+            <button id="end-button" class="primary" type="button">結束本輪</button>
+          </div>
+        </section>
+      </section>
+
+      <footer>
+        <button id="help-button" class="text-button" type="button">作業規則／素材</button>
+        <span>SAMPOT PORT AUTHORITY</span>
+      </footer>
+    </main>
+
+    <section id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+      <div class="sheet-card">
+        <p id="sheet-kicker" class="eyebrow"></p>
+        <h2 id="sheet-title"></h2>
+        <div id="sheet-content"></div>
+        <button id="sheet-button" class="primary jumbo" type="button"></button>
+      </div>
+    </section>
+
+    <section id="help-sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="help-title">
+      <div class="sheet-card rules">
+        <p class="eyebrow">PORT MANUAL 06</p>
+        <h2 id="help-title">場內作業規則</h2>
+        <ol>
+          <li>每輪只有 3 工點；卸貨、重排、裝船、進出臨時區都各花 1 點。</li>
+          <li>只能移動每疊最上層。重櫃不能壓在輕櫃上；每疊最高 4 櫃。</li>
+          <li>危險品必須獨立一疊，左右相鄰堆位也要保持淨空。</li>
+          <li>本輪靠港船名要和櫃身船名相同。逾期與裝錯船的罰分非常重。</li>
+          <li>若橋吊貨櫃沒有任何合法堆位，立即輸掉本班。</li>
+        </ol>
+        <p>音效、音樂與 Cubic 字型署名見 <a href="./ATTRIBUTION.md">ATTRIBUTION.md</a>。</p>
+        <button id="help-close" class="primary" type="button">返回控制台</button>
+      </div>
+    </section>
+
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
