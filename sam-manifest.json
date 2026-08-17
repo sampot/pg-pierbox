@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "rev": "f9584e2",
+  "files": [
+    "app.js",
+    "assets/audio/alarm.ogg",
+    "assets/audio/click.ogg",
+    "assets/audio/contract.ogg",
+    "assets/audio/harbor-loop.ogg",
+    "assets/fonts/cubic-11.woff2",
+    "assets/licenses/blippy-bits.txt",
+    "assets/licenses/cubic-11-ofl.txt",
+    "assets/licenses/kenney-ui-audio.txt",
+    "audio.js",
+    "functions.js",
+    "game.js",
+    "index.html",
+    "persist.js",
+    "styles.css"
+  ]
+}
